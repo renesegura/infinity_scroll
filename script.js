@@ -9,20 +9,23 @@ let imagesLoaded = 0;
 let totalImages = 0;
 
 let photosArray = [];
-// let initialLoad = true;
+// used in if statement below Get photos from Unspalsh API 
+let isInitialLoad = true;
 
 // Unspash API
-let count = 5
+let initialCount = 5
 const apiKey = '6ObxMplYziQhmBhanzQ6UXh-Ye0LspIqp9Blu8273X4';
-let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}&query=work out`;
-
+let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${initialCount}&query=work out`;
+// creating a function to change image count
+function updateAPIURLWithNewCount (picCount) {
+  apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${picCount}&query=work out`;
+}
 // Check if all images were loaded
 function imageLoaded() {
   imagesLoaded++;
   if (imagesLoaded === totalImages) {
     ready = true;
     loader.hidden = true;
-    count = 30;
   }
 }
 // Helper Function to Set Attributes on DOM Elements
@@ -68,6 +71,11 @@ async function getPhotos() {
     const response = await fetch(apiUrl);
     photosArray = await response.json();
     displayPhotos();
+    // Since if statement true will change picCount to 30
+    if (isInitialLoad) {
+      updateAPIURLWithNewCount(30)
+      isInitialLoad = false;
+    }
   } catch (error) {
 
   }
